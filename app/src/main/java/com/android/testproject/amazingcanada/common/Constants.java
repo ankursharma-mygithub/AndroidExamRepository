@@ -4,6 +4,9 @@ package com.android.testproject.amazingcanada.common;
  * Created by ankursharma on 3/7/18.
  */
 
+/**
+ * Common class for all constants in the file.
+ */
 public final class Constants {
 
     //Base URL to download the data.

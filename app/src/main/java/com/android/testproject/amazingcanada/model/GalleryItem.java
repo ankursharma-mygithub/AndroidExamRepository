@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
  * Created by ankursharma on 3/7/18.
  */
 
+/**
+ * Represents each individual item in the list.
+ */
 public class GalleryItem {
 
     //Title of the row information

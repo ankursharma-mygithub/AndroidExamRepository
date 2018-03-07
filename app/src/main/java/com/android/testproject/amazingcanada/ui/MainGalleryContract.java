@@ -6,8 +6,12 @@ import android.widget.ImageView;
  * Created by ankursharma on 3/7/18.
  */
 
+/**
+ * Contract that all the parties associated with the Main/Launcher activity must implement.
+ */
 public interface MainGalleryContract {
 
+    //Presenter layer contract
     interface Presenter {
         void getDataFromURL();
         void onBindItemAtPosition(RowItemHolder holder, int position);
@@ -15,6 +19,7 @@ public interface MainGalleryContract {
         void onStop();
     }
 
+    //View layer contract
     interface View {
         void updateTitleBar(String titleText);
         void displayListOfItems();
@@ -24,6 +29,7 @@ public interface MainGalleryContract {
         void removeWait();
     }
 
+    //Contract for the view holder
     interface RowItemHolder {
         void updateTitle(String titleText);
         void updateDescription(String descText);

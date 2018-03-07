@@ -10,6 +10,7 @@ import com.android.testproject.amazingcanada.di.RetrofitModule;
 /**
  * Created by Ankur Sharma
  */
+
 public class BaseActivity extends AppCompatActivity {
     MainActivityComponent dependency;
 

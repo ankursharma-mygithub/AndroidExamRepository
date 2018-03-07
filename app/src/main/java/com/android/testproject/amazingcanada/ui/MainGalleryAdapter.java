@@ -16,9 +16,12 @@ import com.android.testproject.amazingcanada.ui.MainGalleryContract.Presenter;
  * Created by ankursharma on 3/7/18.
  */
 
+/**
+ * Adapter for recyclerview. The adapter doesn't store the data and works with presenter layer to
+ * get and display the data.
+ */
 public class MainGalleryAdapter extends RecyclerView.Adapter<MainGalleryAdapter.GalleryViewHolder> {
 
-    private GalleryItemsList mItems;
     private Presenter mMainActivityPresenter;
 
     public MainGalleryAdapter(Presenter presenter) {

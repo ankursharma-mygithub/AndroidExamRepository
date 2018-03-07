@@ -6,6 +6,9 @@ import android.app.Application;
  * Created by ankursharma on 3/7/18.
  */
 
+/**
+ * The extended application class
+ */
 public class MyApplication extends Application {
     private static MyApplication sMyApp;
 

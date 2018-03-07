@@ -25,6 +25,9 @@ import rx.subscriptions.CompositeSubscription;
  * Created by ankursharma on 3/7/18.
  */
 
+/**
+ * Presenter for the main activity
+ */
 public class MainGalleryActivityPresenter implements MainGalleryContract.Presenter {
 
     private static final String TAG = "MainGalleryPresenter";

@@ -15,6 +15,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by ankursharma on 3/7/18.
  */
+
+/**
+ * Module part of Dagger2 dependency injection framework
+ */
 @Module
 public class RetrofitModule {
 

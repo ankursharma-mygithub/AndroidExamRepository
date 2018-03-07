@@ -14,6 +14,9 @@ import okhttp3.OkHttpClient;
  * Created by ankursharma on 3/7/18.
  */
 
+/**
+ * Image downloader which uses Picasso library.
+ */
 public class AppPicassoImageDownloader implements ImageDownloader {
 
     @Override

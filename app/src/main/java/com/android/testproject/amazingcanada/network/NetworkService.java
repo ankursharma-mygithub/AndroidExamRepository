@@ -13,6 +13,9 @@ import rx.schedulers.Schedulers;
  * Created by ankursharma on 3/7/18.
  */
 
+/**
+ * Uses RxJava and Retrofit library to dfownload and parse JSON file.
+ */
 public class NetworkService {
     private final MyApiEndPoint mApiEndPoint;
 
