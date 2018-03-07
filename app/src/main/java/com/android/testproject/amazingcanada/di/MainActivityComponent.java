@@ -1,6 +1,7 @@
 package com.android.testproject.amazingcanada.di;
 
 import com.android.testproject.amazingcanada.ui.MainGalleryActivity;
+import com.android.testproject.amazingcanada.ui.MainGalleryContract;
 
 import javax.inject.Singleton;
 

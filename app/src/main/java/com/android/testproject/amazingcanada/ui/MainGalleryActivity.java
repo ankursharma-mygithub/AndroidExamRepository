@@ -144,4 +144,10 @@ public class MainGalleryActivity extends BaseActivity implements MainGalleryCont
     public void removeWait() {
         mProgressBar.setVisibility(View.GONE);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.onStop();
+    }
 }

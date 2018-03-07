@@ -12,6 +12,7 @@ public interface MainGalleryContract {
         void getDataFromURL();
         void onBindItemAtPosition(RowItemHolder holder, int position);
         int getItemsCount();
+        void onStop();
     }
 
     interface View {

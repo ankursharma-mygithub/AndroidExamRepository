@@ -16,6 +16,8 @@ import com.android.testproject.amazingcanada.network.ImageDownloader;
 import com.android.testproject.amazingcanada.network.NetworkService;
 import com.android.testproject.amazingcanada.ui.MainGalleryContract.View;
 
+import java.util.ArrayList;
+
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -61,6 +63,8 @@ public class MainGalleryActivityPresenter implements MainGalleryContract.Present
             Subscription subscription = mService.getItemsList(new NetworkService.GetGalleryItemsListCallback() {
                 @Override
                 public void onSuccess(GalleryItemsList galleryItemsList) {
+                    //If there is an item in the list without any information, don't display.
+                    removeNullItemsFromList(galleryItemsList);
                     mGalleryItemsList = galleryItemsList;
                     mGalleryActivity.removeWait();
                     mGalleryActivity.updateTitleBar(galleryItemsList.getTitle());
@@ -76,7 +80,7 @@ public class MainGalleryActivityPresenter implements MainGalleryContract.Present
             });
             mSubscriptions.add(subscription);
         } else {
-            Log.e(TAG, "Internet disconnecte");
+            Log.e(TAG, "Internet disconnected");
             mGalleryActivity.showErrorDialog(R.string.internet_not_connected);
         }
     }
@@ -109,6 +113,12 @@ public class MainGalleryActivityPresenter implements MainGalleryContract.Present
         return mGalleryItemsList.getGalleryItems().size();
     }
 
+    @Override
+    public void onStop() {
+        //In case view is stopped unsubscribe all the observers.
+        mSubscriptions.unsubscribe();
+    }
+
     /**
      * Check if the device is connected to internet or not.
      */
@@ -116,5 +126,18 @@ public class MainGalleryActivityPresenter implements MainGalleryContract.Present
         ConnectivityManager cm = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    /**
+     * To remove null items from the list.
+     * @param items
+     */
+    private void removeNullItemsFromList(GalleryItemsList items) {
+        //Clear out null values from the list
+        for (GalleryItem item : new ArrayList<>(items.getGalleryItems())) {
+            if (item.getDescription() == null && item.getImageUrl() == null && item.getTitle() == null) {
+                items.getGalleryItems().remove(item);
+            }
+        }
     }
 }
