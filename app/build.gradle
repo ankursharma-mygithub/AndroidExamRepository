@@ -27,4 +27,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     //RecyclerView
     compile 'com.android.support:recyclerview-v7:25.4.0'
+
+    //GSON
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.android.support:support-annotations:22.2.0'
 }

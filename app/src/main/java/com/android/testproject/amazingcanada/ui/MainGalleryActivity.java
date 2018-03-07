@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 
 import com.android.testproject.amazingcanada.R;
 
-public class MainGalleryActivity extends AppCompatActivity implements MainContract.View{
+public class MainGalleryActivity extends AppCompatActivity implements MainGalleryContract.View{
 
     private static final String TAG = "MainGalleryActivity";
 
@@ -27,6 +27,8 @@ public class MainGalleryActivity extends AppCompatActivity implements MainContra
     //common pull to refresh pattern in Android
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    //Presenter class
+    private MainGalleryActivityPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,10 @@ public class MainGalleryActivity extends AppCompatActivity implements MainContra
         setContentView(R.layout.activity_main_gallery);
         //Initialize the views
         initializeViews();
+
+        //Initialize the presenter and get data
+        mPresenter = new MainGalleryActivityPresenter(this);
+        getAndDisplayListOfItems();
     }
 
     /**
@@ -58,6 +64,14 @@ public class MainGalleryActivity extends AppCompatActivity implements MainContra
         //initialize progressbar
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
     }
+
+    /**
+     * Ask presenter to get the data from the specified URL.
+     */
+    private void getAndDisplayListOfItems() {
+        mPresenter.getDataFromURL();
+    }
+
 
     @Override
     public void updateTitleBar(String titleText) {
