@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">AmazingCanada</string>
     <string name="error_message">Error Message</string>
+    <string name="internet_dialog_title">Connect to Internet</string>
+    <string name="internet_not_connected">Please connect to internet to view interested things about Canada.</string>
+    <string name="internet_refresh_msg">Please connect to internet to refresh.</string>
 </resources>

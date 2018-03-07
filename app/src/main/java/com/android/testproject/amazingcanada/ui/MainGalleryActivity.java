@@ -12,8 +12,11 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.android.testproject.amazingcanada.R;
+import com.android.testproject.amazingcanada.network.NetworkService;
 
-public class MainGalleryActivity extends AppCompatActivity implements MainGalleryContract.View{
+import javax.inject.Inject;
+
+public class MainGalleryActivity extends BaseActivity implements MainGalleryContract.View{
 
     private static final String TAG = "MainGalleryActivity";
 
@@ -21,24 +24,28 @@ public class MainGalleryActivity extends AppCompatActivity implements MainGaller
     private RecyclerView mRecyclerView;
 
     //Progress bar
-    ProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
 
     //SwipeRefreshLayout is a part of support library and is a standard way to implement
     //common pull to refresh pattern in Android
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     //Presenter class
-    private MainGalleryActivityPresenter mPresenter;
+    private MainGalleryContract.Presenter mPresenter;
+
+    //Inject using Dagger2
+    @Inject
+    public NetworkService mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getDeps().inject(this);
         setContentView(R.layout.activity_main_gallery);
         //Initialize the views
         initializeViews();
-
         //Initialize the presenter and get data
-        mPresenter = new MainGalleryActivityPresenter(this);
+        mPresenter = new MainGalleryActivityPresenter(mService, this);
         getAndDisplayListOfItems();
     }
 
@@ -46,14 +53,16 @@ public class MainGalleryActivity extends AppCompatActivity implements MainGaller
      * Helper method to initialize the widgets
      */
     private void initializeViews() {
+        //reset title bar text to empty text.
+        //This will be updated from the JSON data.
         updateTitleBar("");
         //initialize swipe refresh layout
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //Todo:
-
+                mSwipeRefreshLayout.setRefreshing(false);
+                getAndDisplayListOfItems();
             }
         });
 
@@ -69,10 +78,16 @@ public class MainGalleryActivity extends AppCompatActivity implements MainGaller
      * Ask presenter to get the data from the specified URL.
      */
     private void getAndDisplayListOfItems() {
-        mPresenter.getDataFromURL();
+        if(mPresenter != null) {
+            mPresenter.getDataFromURL();
+        }
     }
 
 
+    /**
+     * Update title bar of the main view.
+     * @param titleText : title to be updated
+     */
     @Override
     public void updateTitleBar(String titleText) {
         if(titleText != null && !titleText.isEmpty()) {
@@ -80,9 +95,14 @@ public class MainGalleryActivity extends AppCompatActivity implements MainGaller
         }
     }
 
+    /**
+     * Called by presenter once the data is ready.
+     */
     @Override
     public void displayListOfItems() {
-        //Todo:
+        if(mRecyclerView != null) {
+            mRecyclerView.setAdapter(new MainGalleryAdapter(mPresenter));
+        }
     }
 
     @Override
@@ -109,11 +129,17 @@ public class MainGalleryActivity extends AppCompatActivity implements MainGaller
                 .show();
     }
 
+    /**
+     * Display progress bar
+     */
     @Override
     public void showWait() {
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Hide progress bar
+     */
     @Override
     public void removeWait() {
         mProgressBar.setVisibility(View.GONE);
