@@ -15,6 +15,9 @@ import com.android.testproject.amazingcanada.network.NetworkService;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Main and only activity of the application.
  */
@@ -23,14 +26,17 @@ public class MainGalleryActivity extends BaseActivity implements MainGalleryCont
     private static final String TAG = "MainGalleryActivity";
 
     //RecyclerView
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
 
     //Progress bar
-    private ProgressBar mProgressBar;
+    @BindView(R.id.progress)
+    ProgressBar mProgressBar;
 
     //SwipeRefreshLayout is a part of support library and is a standard way to implement
     //common pull to refresh pattern in Android
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     //Presenter class
     private MainGalleryContract.Presenter mPresenter;
@@ -44,6 +50,7 @@ public class MainGalleryActivity extends BaseActivity implements MainGalleryCont
         super.onCreate(savedInstanceState);
         getDeps().inject(this);
         setContentView(R.layout.activity_main_gallery);
+        ButterKnife.bind(this);
         //Initialize the views
         initializeViews();
         //Initialize the presenter and get data
@@ -58,22 +65,22 @@ public class MainGalleryActivity extends BaseActivity implements MainGalleryCont
         //reset title bar text to empty text.
         //This will be updated from the JSON data.
         updateTitleBar("");
+
         //initialize swipe refresh layout
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(false);
-                getAndDisplayListOfItems();
-            }
-        });
+        if(mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    getAndDisplayListOfItems();
+                }
+            });
+        }
 
         //initialize recyclerview
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainGalleryActivity.this));
-
-        //initialize progressbar
-        mProgressBar = (ProgressBar) findViewById(R.id.progress);
+        if(mRecyclerView != null) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(MainGalleryActivity.this));
+        }
     }
 
     /**
