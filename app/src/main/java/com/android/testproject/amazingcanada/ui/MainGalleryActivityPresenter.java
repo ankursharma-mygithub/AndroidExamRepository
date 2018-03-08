@@ -1,22 +1,24 @@
 package com.android.testproject.amazingcanada.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.android.testproject.amazingcanada.R;
-import com.android.testproject.amazingcanada.common.MyApplication;
+import com.android.testproject.amazingcanada.common.AppController;
 import com.android.testproject.amazingcanada.model.GalleryItem;
 import com.android.testproject.amazingcanada.model.GalleryItemsList;
 
-import com.android.testproject.amazingcanada.network.AppPicassoImageDownloader;
-import com.android.testproject.amazingcanada.network.ImageDownloader;
-import com.android.testproject.amazingcanada.network.NetworkService;
+import com.android.testproject.amazingcanada.network.DataFetcherContract;
+import com.android.testproject.amazingcanada.network.ImageDownloaderContract;
+import com.android.testproject.amazingcanada.network.RetrofitDownloaderService;
 import com.android.testproject.amazingcanada.ui.MainGalleryContract.View;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -43,17 +45,18 @@ public class MainGalleryActivityPresenter implements MainGalleryContract.Present
     private CompositeSubscription mSubscriptions;
 
     //To download data using Retrofit and then informing presenter
-    private final NetworkService mService;
+    private final DataFetcherContract mService;
 
     //Image downloader
-    private ImageDownloader mImageDownloader;
+    private ImageDownloaderContract mImageDownloader;
 
-    public MainGalleryActivityPresenter(NetworkService service, View view) {
+    @Inject
+    public MainGalleryActivityPresenter(DataFetcherContract service, View view, ImageDownloaderContract imageDownloader, CompositeSubscription compositeSubscription) {
         mGalleryActivity = view;
-        mContext = MyApplication.getMyApp().getApplicationContext();
-        mSubscriptions = new CompositeSubscription();
+        mContext = AppController.getAppController().getApplicationContext();
+        mSubscriptions = compositeSubscription;
         mService = service;
-        mImageDownloader = new AppPicassoImageDownloader();
+        mImageDownloader = imageDownloader;
     }
 
     /**
@@ -63,7 +66,7 @@ public class MainGalleryActivityPresenter implements MainGalleryContract.Present
     public void getDataFromURL() {
         if(isNetworkConnected()) {
             mGalleryActivity.showWait();
-            Subscription subscription = mService.getItemsList(new NetworkService.GetGalleryItemsListCallback() {
+            Subscription subscription = mService.getItemsList(new RetrofitDownloaderService.GetGalleryItemsListCallback() {
                 @Override
                 public void onSuccess(GalleryItemsList galleryItemsList) {
                     //If there is an item in the list without any information, don't display.
@@ -96,12 +99,13 @@ public class MainGalleryActivityPresenter implements MainGalleryContract.Present
      * @param position :: position of the view holder
      */
     @Override
-    public void onBindItemAtPosition(MainGalleryContract.RowItemHolder holder, int position) {
+    public void onBindItemAtPosition(final MainGalleryContract.RowItemHolder holder, int position) {
         GalleryItem item = mGalleryItemsList.getGalleryItems().get(position);
         holder.updateDescription(item.getDescription());
         holder.updateTitle(item.getTitle());
-        holder.getImageView().setVisibility(android.view.View.INVISIBLE);
         String imageUrl = item.getImageUrl();
+        final ImageView imageView = holder.getImageView();
+        imageView.setVisibility(android.view.View.INVISIBLE);
         if(imageUrl != null && !imageUrl.isEmpty()) {
             mImageDownloader.downloadImage(mContext, imageUrl, holder.getImageView());
         }

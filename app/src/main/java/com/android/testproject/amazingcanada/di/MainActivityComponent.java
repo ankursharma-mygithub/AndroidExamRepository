@@ -14,7 +14,7 @@ import dagger.Component;
  * Component part of Dagger2
  */
 @Singleton
-@Component(modules = {RetrofitModule.class,})
+@Component(modules = {RetrofitModule.class, PresenterModule.class})
 public interface MainActivityComponent {
     void inject(MainGalleryActivity mainGalleryActivity);
 }

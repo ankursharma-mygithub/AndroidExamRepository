@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,7 +12,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.android.testproject.amazingcanada.R;
-import com.android.testproject.amazingcanada.network.NetworkService;
+import com.android.testproject.amazingcanada.di.DaggerMainActivityComponent;
+import com.android.testproject.amazingcanada.di.PresenterModule;
+import com.android.testproject.amazingcanada.di.RetrofitModule;
 
 import javax.inject.Inject;
 
@@ -21,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Main and only activity of the application.
  */
-public class MainGalleryActivity extends BaseActivity implements MainGalleryContract.View{
+public class MainGalleryActivity extends AppCompatActivity implements MainGalleryContract.View{
 
     private static final String TAG = "MainGalleryActivity";
 
@@ -33,28 +36,26 @@ public class MainGalleryActivity extends BaseActivity implements MainGalleryCont
     @BindView(R.id.progress)
     ProgressBar mProgressBar;
 
+
     //SwipeRefreshLayout is a part of support library and is a standard way to implement
     //common pull to refresh pattern in Android
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
     //Presenter class
-    private MainGalleryContract.Presenter mPresenter;
-
-    //Inject using Dagger2
     @Inject
-    public NetworkService mService;
+    public MainGalleryActivityPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getDeps().inject(this);
+
+        DaggerMainActivityComponent.builder().retrofitModule(new RetrofitModule()).presenterModule(new PresenterModule(this)).build().inject(this);
         setContentView(R.layout.activity_main_gallery);
         ButterKnife.bind(this);
         //Initialize the views
         initializeViews();
-        //Initialize the presenter and get data
-        mPresenter = new MainGalleryActivityPresenter(mService, this);
+        //Display list of items
         getAndDisplayListOfItems();
     }
 
@@ -110,7 +111,7 @@ public class MainGalleryActivity extends BaseActivity implements MainGalleryCont
     @Override
     public void displayListOfItems() {
         if(mRecyclerView != null) {
-            mRecyclerView.setAdapter(new MainGalleryAdapter(mPresenter));
+              mRecyclerView.setAdapter(new MainGalleryAdapter(mPresenter));
         }
     }
 

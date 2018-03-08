@@ -1,8 +1,9 @@
 package com.android.testproject.amazingcanada.di;
 
 import com.android.testproject.amazingcanada.common.Constants;
+import com.android.testproject.amazingcanada.network.DataFetcherContract;
 import com.android.testproject.amazingcanada.network.MyApiEndPoint;
-import com.android.testproject.amazingcanada.network.NetworkService;
+import com.android.testproject.amazingcanada.network.RetrofitDownloaderService;
 
 import javax.inject.Singleton;
 
@@ -26,6 +27,7 @@ public class RetrofitModule {
     @Singleton
     Retrofit provideCall() {
 
+
         return new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -44,9 +46,14 @@ public class RetrofitModule {
     @Provides
     @Singleton
     @SuppressWarnings("unused")
-    public NetworkService providesService(
+    public DataFetcherContract providesService(
             MyApiEndPoint networkService) {
-        return new NetworkService(networkService);
+        return new RetrofitDownloaderService(networkService);
     }
 
+//    @Provides
+//    @Singleton
+//    public MainGalleryContract.View provideView() {
+//        return mView;
+//    }
 }

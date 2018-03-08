@@ -16,10 +16,10 @@ import rx.schedulers.Schedulers;
 /**
  * Uses RxJava and Retrofit library to dfownload and parse JSON file.
  */
-public class NetworkService {
+public class RetrofitDownloaderService implements DataFetcherContract{
     private final MyApiEndPoint mApiEndPoint;
 
-    public NetworkService(MyApiEndPoint apiEndPoint) {
+    public RetrofitDownloaderService(MyApiEndPoint apiEndPoint) {
         mApiEndPoint = apiEndPoint;
     }
 
@@ -47,16 +47,11 @@ public class NetworkService {
                     }
 
                     @Override
-                    public void onNext(GalleryItemsList cityListResponse) {
-                        callback.onSuccess(cityListResponse);
+                    public void onNext(GalleryItemsList galleryItemsList) {
+                        callback.onSuccess(galleryItemsList);
 
                     }
                 });
     }
 
-    //Callback Interface to be implemented by the presenter
-    public interface GetGalleryItemsListCallback{
-        void onSuccess(GalleryItemsList galleryItemsList);
-        void onError(String message);
-    }
 }

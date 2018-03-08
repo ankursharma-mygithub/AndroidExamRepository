@@ -7,6 +7,6 @@ import android.widget.ImageView;
  * Created by ankursharma on 3/7/18.
  */
 
-public interface ImageDownloader {
+public interface ImageDownloaderContract {
     void downloadImage(Context context, String url, ImageView imageView);
 }
