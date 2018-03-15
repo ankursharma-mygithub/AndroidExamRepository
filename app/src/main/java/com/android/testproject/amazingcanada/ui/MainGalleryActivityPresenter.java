@@ -86,6 +86,7 @@ public class MainGalleryActivityPresenter implements MainGalleryContract.Present
             });
             mSubscriptions.add(subscription);
         } else {
+            mGalleryActivity.removeWait();
             Log.e(TAG, "Internet disconnected");
             mGalleryActivity.showErrorDialog(R.string.internet_not_connected);
         }

@@ -1,4 +1,4 @@
-package com.android.testproject.canadafacts;
+package com.android.testproject.amazingcanada;
 
 /**
  * Created by ankursharma on 3/8/18.
